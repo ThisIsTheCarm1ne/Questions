@@ -30,3 +30,11 @@ Stack:
 `DELETE` - You can delete a poll, but I never used this in frontend :p
 
 ## How to run docker
+
+`docker compose -up`
+
+`And check :5173 port`
+
+Live updates only work with votes, not with polls.
+
+Polls won't be updated live, only votes on questions

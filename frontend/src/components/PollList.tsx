@@ -26,16 +26,16 @@ export default function PollList() {
     const [polls, setPolls] = useState<IPoll[] | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [page, setPage] = useState<number>(0);
-    const [hasMore, setHasMore] = useState<false>(true);
+    const [hasMore, setHasMore] = useState<boolean>(true);
 
     const observerRef = useRef<HTMLDivElement | null>(null);
 
 
     useEffect(() => {
         // WebSocket setup
-        socket.on('pollUpdated', (updatedPoll: Poll) => {
+        socket.on('pollUpdated', (updatedPoll: IPoll) => {
             setPolls(prevPolls =>
-                prevPolls.map(poll => (poll.id === updatedPoll.id ? updatedPoll : poll))
+                (prevPolls ?? []).map(poll => (poll.id === updatedPoll.id ? updatedPoll : poll))
             );
         });
 
@@ -57,11 +57,7 @@ export default function PollList() {
 
             if (!data.success && data.data.length === 0) throw new Error("Could not fetch Polls");
 
-            if (polls === null) {
-                setPolls(data.data);
-            } else {
-                setPolls(prevPolls => [...prevPolls, ...data.data]);
-            }
+            setPolls(prevPolls => [...(prevPolls || []), ...data.data]);
 
             setPage(prevPage => prevPage + 1);
 

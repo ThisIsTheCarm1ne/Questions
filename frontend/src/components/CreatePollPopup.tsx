@@ -24,6 +24,11 @@ export default function CreatePollPopup() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (questions.length === 0) {
+            console.log("No Questions Set");
+            return
+        }
         const payload = {
             name: title,
             questions: questions,
@@ -31,7 +36,6 @@ export default function CreatePollPopup() {
         };
 
         try {
-            console.log(payload);
             const response = await fetch('http://localhost:3000/api/polls', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -55,6 +59,7 @@ export default function CreatePollPopup() {
         <div>
             <button
                 onClick={() => setIsPopupOpen(!isPopupOpen)}
+                className="border-2 border-baclk rounded mb-10"
             >
                 Create Poll
             </button>
@@ -78,21 +83,25 @@ export default function CreatePollPopup() {
                     />
                     <div className="flex flex-col w-96">
                         {questions.map((question, index) => (
-                            <div key={index} className="flex items-center mb-4">
+                            <div key={index} className="flex items-center mb-4 content-center justify-center flex-wrap">
                                 <input
                                     type="text"
                                     value={question}
                                     onChange={(e) => handleQuestionChange(index, e.target.value)}
                                     placeholder={`Question ${index + 1}`}
                                     required={true}
-                                    className="w-full mb-4 p-2 border border-gray-300 rounded"
+                                    className="p-2 border border-gray-300 rounded"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveQuestion(index)}
-                                    className="ml-2 px-2 py-1 bg-red-500 text-white rounded"
+                                    className="ml-2 px-2 py-1 bg-red-500 text-white rounded h-full"
                                 >
-                                    Remove
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor" className="size-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round"
+                                              d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                    </svg>
                                 </button>
                             </div>
                         ))}

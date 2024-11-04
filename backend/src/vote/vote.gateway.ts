@@ -19,7 +19,12 @@ import { Repository } from 'typeorm';
 import { Poll } from '../polls/entities/poll.entity';
 
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: '*',            // Allow all origins
+    credentials: true,      // Allow credentials
+  },
+})
 export class VoteGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(
       @InjectRepository(Poll)
@@ -52,6 +57,11 @@ export class VoteGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   handleConnection(client: Socket, ...args: any[]) {
+    // Enable CORS for WebSocket
+    this.server.emit('headers', {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+    });
     this.logger.log(`Client connected: ${client.id}`);
   }
 
